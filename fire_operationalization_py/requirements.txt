@@ -1,0 +1,6 @@
+watchdog
+requests
+numpy
+geopandas
+matplotlib
+rasterio
