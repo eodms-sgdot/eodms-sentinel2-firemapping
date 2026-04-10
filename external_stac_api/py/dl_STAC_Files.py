@@ -95,6 +95,7 @@ for idx, row in gdf_latlon.iterrows():
                     "nir08",
                     "red",
                     "rededge2",
+                    "rededge3",
                     "scl",
                     "visual"
                 ]
