@@ -39,10 +39,7 @@ start_date = '2025-06-03T00:00:00Z'
 end_date = '2025-06-03T23:59:59Z'
 
 # Open EODMS STAC catalog and explore available collections
-#ogc_api_url = 'https://www-staging-eodms.aws.nrcan-rncan.cloud/QGIS/eodms-qgis-server/wfs3'
-#ogc_api_url = 'https://www-staging-eodms.aws.nrcan-rncan.cloud/ogc'
-#ogc_api_url = 'http://localhost:8081/cgi-bin/qgis_mapserv.fcgi.exe/wfs3'
-ogc_api_url = 'https://www-staging-eodms.aws.nrcan-rncan.cloud/maps/egs/wfs3'
+ogc_api_url = 'https://www.eodms-sgdot.nrcan-rncan.gc.ca/search/
 # Construct the collections endpoint
 collections_url = f"{ogc_api_url}/collections"
 # Send a GET request to the collections endpoint
