@@ -13,8 +13,6 @@ gdf = gpd.read_file(shapefile_path)
 gdf_latlon = gdf.to_crs(epsg=4326)
 
 # Download assets
-#download_dir = r"C:\NRCanWorkData\EODMS_CCRS\EODMS_Jupyter_Data\Sentinel2\BC_2020_LargeFires200Ha"
-#os.makedirs(download_dir, exist_ok=True)
 def download_s2_data(s2FileItem, assetName, download_dir):
     asset = s2FileItem.assets[assetName]  # for NBR
     url = asset.href
@@ -23,8 +21,6 @@ def download_s2_data(s2FileItem, assetName, download_dir):
     print(f"Downloading {filename}...")
     with open(filename, "wb") as f:
         f.write(response.content)
-    #filename_fireComposite_VRT = os.path.join(download_dir, f"{item.id}_fireComposite.tif.vrt")
-    #make_fireComposite_VRT_withGDAL(filename_swir22, filename_nir8A, filename_red, filename_fireComposite_VRT)
     print("Download complete.")
 
 def search_in_stac_api(bbox, reported_date):

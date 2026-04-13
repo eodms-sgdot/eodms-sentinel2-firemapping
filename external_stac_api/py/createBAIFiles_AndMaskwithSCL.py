@@ -137,7 +137,7 @@ def CreateBAIFiles(scenes):
 # Start build the scene set with all bands for creating BAI file
 # --------------------------------------------------
 input_dir = Path(
-    r"C:\NRCanWorkData\EODMS_CCRS\EODMS_FireS2_Res\Sentinel2\stac_api_data"
+    r"..\Sentinel2\stac_api_data"
 )
 
 # --------------------------------------------------

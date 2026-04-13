@@ -8,7 +8,7 @@ from watchdog.events import FileSystemEventHandler
 #for the subprocess
 import geopandas as gpd
 
-WATCH_FOLDER = r"C:\NRCanWorkData\EODMS_CCRS\EODMS_FireS2_Opn\sentinel_2_data"   # <-- change this to your folder path
+WATCH_FOLDER = r"..\EODMS_FireS2_Opn\sentinel_2_data"   # <-- change this to your folder path
 
 
 # ---------------------------------------------
