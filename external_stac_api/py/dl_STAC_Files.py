@@ -8,7 +8,7 @@ import os
 import rasterio
 import csv
 # Load the shapefile
-shapefile_path = "C:/NRCanWorkData/EODMS_CCRS/EODMS_Jupyter_data/NFDB_poly_large_fires/NFDB_poly_20210707_large_fires.shp"
+shapefile_path = "../data/NFDB_poly_20210707_large_fires.shp"
 gdf = gpd.read_file(shapefile_path)
 gdf_latlon = gdf.to_crs(epsg=4326)
 
@@ -51,7 +51,7 @@ def process_polygon(polygon, SIZE_HA, SRC_AGENCY, REP_DATE, OUT_DATE):
     return results
 
 #Have a record of the image collected for each polygon - as a .csv file
-resDataFileName = "C:/NRCanWorkData/EODMS_CCRS/EODMS_FireS2_Res/Results/resultsImgAnalyzed.csv"
+resDataFileName = ../Results/resultsImgAnalyzed.csv"
 with open(resDataFileName, mode='w', newline='') as file:
     writer = csv.writer(file)
     # Usage example:
@@ -85,7 +85,7 @@ for idx, row in gdf_latlon.iterrows():
             for s2FileItem in s2FileItems.items():
                 s2FileName = s2FileItem.id
                 s2FileNmLower = s2FileName.lower()
-                s2FilePath = f"C:/NRCanWorkData/EODMS_CCRS/EODMS_FireS2_Res/Sentinel2/stac_api_data/{s2FileNmLower}"
+                s2FilePath = f"../downloadedData/Sentinel2/stac_api_data/{s2FileNmLower}"
                 download_dir = s2FilePath
                 os.makedirs(download_dir, exist_ok=True)
                 

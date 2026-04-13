@@ -58,46 +58,7 @@ def count_pixels_in_polygon(raster_path, polygon_gdf):
             
         # Check overlap explicitly
         raster_extent = box(*src.bounds)
-        """
-        #convert raster bounds as geojson for verification in QGIS:
-        raster_geojson = bounds_to_geojson(
-        src.bounds,
-        crs=str(src.crs)
-        )
-        #convert polygon bounds as geojson for verification in QGIS:
-        polygon_geojson = bounds_to_geojson(
-        geom.bounds,
-        crs=str(polygon_gdf.crs)
-        )
-        #convert polygon bounds as geojson for verification in QGIS:
-        polygon_reproj_geojson = bounds_to_geojson(
-        geom.bounds,
-        crs=str(reprojected_polygon.crs)
-        )
-      
-        with open("C:/NRCanWorkData/EODMS_CCRS/EODMS_FireS2_Res/Results/raster_extent.geojson", "w") as f:
-            json.dump(raster_geojson, f, indent=2)
-
-        with open("C:/NRCanWorkData/EODMS_CCRS/EODMS_FireS2_Res/Results/polygon_bounds.geojson", "w") as f:
-            json.dump(polygon_geojson, f, indent=2)
-            
-        with open("C:/NRCanWorkData/EODMS_CCRS/EODMS_FireS2_Res/Results/polygon_reproj_bounds.geojson", "w") as f:
-            json.dump(polygon_geojson, f, indent=2)
         
-        print("\n--- CRS ---")
-        print("Raster CRS :", src.crs)
-        print("Polygon CRS:", polygon_gdf.crs)
-        print("Reprojected Polygon CRS:", reprojected_polygon.crs)
-
-        print("\n--- Raster bounds (minx, miny, maxx, maxy) ---")
-        print(src.bounds)
-
-        print("\n--- Polygon bounds (minx, miny, maxx, maxy) ---")
-        print(geom.bounds)
-
-        print("\n--- Do they intersect? ---")
-        print(geom.intersects(raster_extent))
-        """
         if not geom.intersects(raster_extent):
             raise ValueError("Polygon does not overlap raster footprint")
         
@@ -124,16 +85,16 @@ def count_pixels_in_polygon(raster_path, polygon_gdf):
     #return src.crs
 
 # Load the shapefile
-shapefile_path = "C:/NRCanWorkData/EODMS_CCRS/EODMS_Jupyter_data/NFDB_poly_large_fires/NFDB_poly_20210707_large_fires.shp"
+shapefile_path = "../data/NFDB_poly_20210707_large_fires.shp"
 #gdf = gpd.read_file(shapefile_path)
-gdf = gpd.read_file("C:/NRCanWorkData/EODMS_CCRS/EODMS_FireS2_Res/NFDB_poly_large_fires/NFDB_poly_large_fires.gpkg", layer="NFDB_poly_large_fires_32611")
+gdf = gpd.read_file("../data/NFDB_poly_large_fires.gpkg", layer="NFDB_poly_large_fires_3978")
 #gdf_latlon = gdf.to_crs(epsg=4326)
 gdfCRS= gdf.crs
 
 # Iterate through each row (polygon) in the GeoDataFrame
 count = 0
 print(f"Processing wildfire polygons for year: 2020")
-resDataFileName = "C:/NRCanWorkData/EODMS_CCRS/EODMS_FireS2_Res/Results/resultsImgAnalyzed.csv"
+resDataFileName = "../Results/resultsImgAnalyzed.csv"
 
 
 #print(df.columns)
@@ -155,7 +116,7 @@ with open(resDataFileName, newline="", encoding="utf-8") as f:
             fire_geom = row.geometry
         """
         s2FileLower = S2FileName.lower()
-        NBRFilePath = f"C:/NRCanWorkData/EODMS_CCRS/EODMS_FireS2_Res/Sentinel2/stac_api_data/{s2FileLower}/{s2FileLower}_NBRVegMask.tif"
+        NBRFilePath = f"../downloadedData/Sentinel2/stac_api_data/{s2FileLower}/{s2FileLower}_NBRVegMask.tif"
         NumOfPixels = count_pixels_in_polygon(NBRFilePath, gdf_subset)
         print(f"Number of Pixels {NumOfPixels}")
         df.at[idx, "numofpixels"] = NumOfPixels
