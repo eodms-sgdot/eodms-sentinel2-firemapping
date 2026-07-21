@@ -57,12 +57,14 @@ def find_cloud_level(start_directory):
         if xml_file: #you get inspire.xml in this not useful - check above logic
             break
     #"MTD_MSIL2A.xml"
+    #--- 1. Find product XML (cloud info) ---
     print(f"-------- Extracting cloud level info from {xml_file}")
     tree = ET.parse(xml_file)
     root = tree.getroot()
     cloud = float(root.find(".//Cloud_Coverage_Assessment").text)
     
-    # --- 1. Find product XML (cloud info) ---
+    # MTD_TL.xml
+     #--- 2. Find product XML (CRS info) ---
     tile_xml = glob.glob(os.path.join(start_directory, "**", "MTD_TL.xml"), recursive=True)
 
     crs = None
@@ -89,7 +91,7 @@ def find_cloud_level(start_directory):
     return crs,cloud
 
 # ---------------------------------------------
-# Function to download the s3 data locally to process
+# Function to download the s3 data locally to process and get cloud and crs from XML before July 20 2026
 # ---------------------------------------------
 def process_product_link(product_link, firename):
     zip_url = product_link
@@ -112,7 +114,34 @@ def process_product_link(product_link, firename):
     else:
         print(f"Failed to download ZIP file. Status code: {response.status_code}")
         return none
-        
+
+# ---------------------------------------------
+# Function to download the s3 data locally to process, cloud cover property directly from STAC
+# ---------------------------------------------
+def process_prod_link(product_link, firename):
+    zip_url = product_link
+    # Directory to extract files to
+    extract_to = "./sentinel_2_data/2026_Fires/" + firename
+    # Download and extract a sentinel 2 SAFE zip
+    os.makedirs(extract_to, exist_ok=True)
+
+    # Extract all files
+    zip_name = os.path.splitext(os.path.basename(zip_url))[0]
+    # Download and extract
+    response = requests.get(zip_url)
+    if response.status_code == 200:
+        with zipfile.ZipFile(io.BytesIO(response.content)) as zip_ref:
+            zip_ref.extractall(extract_to)
+        start_directory = extract_to + "/" + zip_name + ".SAFE"
+        print(f"-------- Files extracted to '{start_directory}' ")
+        #cloud_level from property
+        #crs from rasterio.open function
+        #crs, cloud_level = find_cloud_level(start_directory)
+        return start_directory
+    else:
+        print(f"Failed to download ZIP file. Status code: {response.status_code}")
+        return none
+
 def remove_readonly(func, path, exc_info):
     os.chmod(path, stat.S_IWRITE)
     func(path)
