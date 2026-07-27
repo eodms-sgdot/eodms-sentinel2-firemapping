@@ -91,13 +91,11 @@ def merge_polygons(output_shp):
 
     merged_polygons = output_shp.parent / "burn_polygons_merged_simpl.shp"
     result.to_file(merged_polygons)
-    
-    
 
 def convert_nbr_as_polygons(nbr_path, fireProjectName, safe_filename):
     #safe_filename = "S2B_MSIL2A_20260702T175909_N0512_R041_T14VMH_20260702T214234"
-    input_dir = Path("Result_Images/Input_COG_Images") / fireProjectName / safe_filename
-    output_dir = Path("Result_Images/NBR_Polygon_SHP") / fireProjectName / safe_filename 
+    input_dir = Path("Result_Images/Input_COG_Images/") / fireProjectName / safe_filename
+    output_dir = Path("Result_Images/NBR_Polygon_SHP/") / fireProjectName / safe_filename 
     output_dir.mkdir(parents=True, exist_ok=True)
     output_shp = output_dir / "burn_polygons.shp"
     
@@ -105,12 +103,12 @@ def convert_nbr_as_polygons(nbr_path, fireProjectName, safe_filename):
 
     polygons = mask_to_polygons(mask, transform)
 
-    save_polygons(polygons, crs, output_shp, safe_filename)
+    save_polygons(polygons, crs, output_shp, safe_name)
     merge_polygons(output_shp)
     print("✅ Polygon file created:", output_shp)
 
 if __name__ == "__main__":
-    if len(sys.argv) < 3:
+    if len(sys.argv) < 2:
         raise ValueError("Please provide the NBR Path")
     nbr_path = sys.argv[1]
     fireProjectName = sys.argv[2]

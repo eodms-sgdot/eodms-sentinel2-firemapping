@@ -145,7 +145,7 @@ def CreateNBRWithVegMask(scenes, output_dir):
 
         print("Classes 4,5,7 masked NBR saved to:", nbrVegMask_path)
 
-def main(fireProjectName, outputdir_zipname):
+def createNBR(fireProjectName, outputdir_zipname):
     print("Running NBR processing...")
     # your code
     
@@ -157,7 +157,6 @@ def main(fireProjectName, outputdir_zipname):
     print(f"input directory: {input_dir}")
     output_dir = Path(".", "Result_Images", "NBR_Images", fireProjectName, outputdir_zipname)
     #output_dir = Path(f"./Result_Images/NBR_Images/{outputdir_zipname}")
-    print(f"output directory: {output_dir}")
     print(f"output directory: {output_dir}")
     # --------------------------------------------------
     # Find all candidate files
@@ -231,7 +230,4 @@ if __name__ == "__main__":
         raise ValueError("Please provide the fire Project Name and the SAFE folder name")
     fireProjectName = sys.argv[1]
     outputdir_zipname = sys.argv[2]
-    #safe_name = sys.argv[1]
-    # remove .SAFE if present
-    #outputdir_zipname = safe_name.replace(".SAFE", "")
-    main(fireProjectName, outputdir_zipname)
+    createNBR(fireProjectName, outputdir_zipname)
