@@ -94,7 +94,7 @@ def CreateNBRWithVegMask(scenes, output_dir):
         nbr_scene_dir = scl_path.parent
         os.makedirs(nbr_scene_dir, exist_ok=True)
         nbr_path = output_dir / f"{scene_id}_NBR.tif"
-        scl_path = nbr_scene_dir / f"{scene_id}_scl_20m_cog.tif"
+        #scl_path = nbr_scene_dir / f"{scene_id}_SCL_20m_cog.tif"
         nbrVegMask_path = output_dir / f"{scene_id}_NBRMaskedCls4_5_7.tif"
         #os.makedirs(nbrVegMask_path, exist_ok=True)
         print(f"Masking NBR: {nbr_path.name}")
@@ -144,6 +144,7 @@ def CreateNBRWithVegMask(scenes, output_dir):
             dst.write(nbr_veg, 1)
 
         print("Classes 4,5,7 masked NBR saved to:", nbrVegMask_path)
+        return nbrVegMask_path
 
 def createNBR(fireProjectName, outputdir_zipname):
     print("Running NBR processing...")
@@ -222,8 +223,8 @@ def createNBR(fireProjectName, outputdir_zipname):
     # --------------------------------------------------
     # Create NBR Files masked with the classes 4,5,7
     # --------------------------------------------------
-    CreateNBRWithVegMask(scenes, output_dir)
-    
+    nbrVegMask_path = CreateNBRWithVegMask(scenes, output_dir)
+    return nbrVegMask_path
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:

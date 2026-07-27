@@ -9,6 +9,7 @@ import sys
 from shapely.geometry import Polygon,MultiPolygon
 
 def create_burn_mask(nbr_path, threshold=-0.2):
+    print(f"NBR Path: {nbr_path}")
     with rasterio.open(nbr_path) as src:
         nbr = src.read(1)
         
@@ -103,7 +104,7 @@ def convert_nbr_as_polygons(nbr_path, fireProjectName, safe_filename):
 
     polygons = mask_to_polygons(mask, transform)
 
-    save_polygons(polygons, crs, output_shp, safe_name)
+    save_polygons(polygons, crs, output_shp, safe_filename)
     merge_polygons(output_shp)
     print("✅ Polygon file created:", output_shp)
 
