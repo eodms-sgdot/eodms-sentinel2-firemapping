@@ -1,0 +1,3 @@
+I have created two versions of Lambda
+1) checks for any zip file addition to the public S3 - traditional lambda trigger. But can be done only at production since sentinel2 is in open data
+2) Event bridge - check for any zip file in a folder specified every 20 minutes, using event bridge - similar to the RCM method
