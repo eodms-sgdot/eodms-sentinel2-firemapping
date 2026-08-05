@@ -155,12 +155,16 @@ def find_band_jp2file_make_cog(directory_to_search, band_to_search, safeFileName
         )
     print(f"Converted {input_jp2} to Cloud Optimized GeoTIFF: {local_output_cog}")
     numberOfActiveFirePixels = findIfActiveFire(local_output_cog)
+    date_str = safeFileName[11:19] # 20260804
+    year = date_str[:4]
+    month = date_str[4:6]
+    day = date_str[6:8]
     if numberOfActiveFirePixels > 10:
         print("Saving COG to S3 for analysis because there is more than (10 pixels) 100 sq.m of active fire")    
         s3.upload_file(
             local_output_cog,
             "s2-fire-ard",
-            f"Result_Images/Input_COG_Images/{firename}/{safeFileName}/{band_filename}_cog.tif"
+            f"Result_Images/Input_COG_Images/{year}/{month}/{day}/{safeFileName}/{band_filename}_cog.tif"
             )
     return local_output_cog
 

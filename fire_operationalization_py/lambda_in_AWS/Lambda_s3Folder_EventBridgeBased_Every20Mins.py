@@ -9,33 +9,6 @@ import os
 import traceback
 s3 = boto3.client("s3")
 
-def get_s2_zip_files(bucket_name, s3_folder):
-
-        # Initialize the S3 client
-        s3_client = boto3.client('s3')
-        
-        # Create a paginator for ListObjectsV2
-        paginator = s3_client.get_paginator('list_objects_v2')
-        
-        # Configure the prefix (folder path)
-        # Ensure the prefix does not start with a '/'
-        prefix = s3_folder.lstrip('/')
-        
-        images = []
-        
-        # Page through the results safely
-        page_iterator = paginator.paginate(Bucket=bucket_name, Prefix=prefix)
-        
-        for page in page_iterator:
-            if 'Contents' in page:
-                for obj in page['Contents']:
-                    key = obj['Key']
-                    # Check if the object ends with the specified string
-                    if key.endswith('.zip'):
-                        print(f"key is {key}")
-                        images.append(key)
-        return images
-
 def lambda_handler(event, context):
     aws_account_id = context.invoked_function_arn.split(":")[4]
     print(f"event: {event}")
@@ -46,7 +19,6 @@ def lambda_handler(event, context):
     today = datetime.now(timezone.utc)
     yesterday = today - timedelta(days=1)
     s3_folder_yesterday = yesterday.strftime("Sentinel-2/S2MSI2A/%Y/%m/%d/")
-    print(f"Is it catching yesterday correctly? {yesterday} and {s3_folder_yesterday}")
 
     #bucket_name and s3_folder can be sent from test
     bucket_name = event.get('bucket_name', "sentinel-products-ca-mirror")
@@ -58,6 +30,7 @@ def lambda_handler(event, context):
         s3_folder_yesterday
         ]
     #this way we will pick up August 4th data that got loaded on August 5th morning
+    
     #Modify this to a proper project name, and find files in that folder
     fireProjectName = "Lambda_Function_s3Folder_ActiveFireRecord_Test"
     bands = ["B12"]
