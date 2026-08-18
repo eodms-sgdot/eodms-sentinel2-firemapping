@@ -1,0 +1,10 @@
+FROM public.ecr.aws/lambda/python:3.12
+
+#COPY save_activeFire_as_polygonsTools.py ${LAMBDA_TASK_ROOT}/
+#COPY lambda_function.py ${LAMBDA_TASK_ROOT}/
+
+COPY requirements.txt .
+RUN pip3 install --break-system-packages -r requirements.txt
+RUN dnf install -y expat
+
+CMD ["lambda_function.lambda_handler"]

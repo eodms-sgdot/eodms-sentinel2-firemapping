@@ -1,0 +1,6 @@
+FROM localhost/b12firepolysbase:latest
+#COPY save_activeFire_as_polygonsTools.py ${LAMBDA_TASK_ROOT}/
+#COPY lambda_function.py ${LAMBDA_TASK_ROOT}/
+WORKDIR /var/task/
+COPY *.py .
+CMD ["lambda_function.lambda_handler"]

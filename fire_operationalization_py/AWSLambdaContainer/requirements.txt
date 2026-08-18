@@ -1,0 +1,5 @@
+geopandas
+rasterio
+shapely
+numpy
+boto3
