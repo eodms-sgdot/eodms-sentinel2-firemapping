@@ -153,10 +153,10 @@ def createNBR(fireProjectName, outputdir_zipname):
     # --------------------------------------------------
     # Start build the scene set with all bands for creating NBR file
     # --------------------------------------------------
-    input_dir = Path(".", "Result_Images", "Input_COG_Images", fireProjectName, outputdir_zipname)
+    input_dir = Path("/mnt/data", "Result_Images", "Input_COG_Images", fireProjectName, outputdir_zipname)
     #input_dir = Path(f"./Result_Images/Input_COG_Images/{outputdir_zipname}")
     print(f"input directory: {input_dir}")
-    output_dir = Path(".", "Result_Images", "NBR_Images", fireProjectName, outputdir_zipname)
+    output_dir = Path("/mnt/data", "Result_Images", "NBR_Images", fireProjectName, outputdir_zipname)
     #output_dir = Path(f"./Result_Images/NBR_Images/{outputdir_zipname}")
     print(f"output directory: {output_dir}")
     # --------------------------------------------------

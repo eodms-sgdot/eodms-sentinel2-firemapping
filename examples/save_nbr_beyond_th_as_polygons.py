@@ -95,11 +95,11 @@ def merge_polygons(output_shp):
 
 def convert_nbr_as_polygons(nbr_path, fireProjectName, safe_filename):
     #safe_filename = "S2B_MSIL2A_20260702T175909_N0512_R041_T14VMH_20260702T214234"
-    input_dir = Path("Result_Images/Input_COG_Images/") / fireProjectName / safe_filename
-    output_dir = Path("Result_Images/NBR_Polygon_SHP/") / fireProjectName / safe_filename 
+    input_dir = Path("/mnt/data/Result_Images/Input_COG_Images/") / fireProjectName / safe_filename
+    output_dir = Path("/mnt/data/Result_Images/NBR_Polygon_SHP/") / fireProjectName / safe_filename 
     output_dir.mkdir(parents=True, exist_ok=True)
     output_shp = output_dir / "burn_polygons.shp"
-    
+    print(f"NBR Path: {nbr_path}")    
     mask, transform, crs = create_burn_mask(nbr_path)
 
     polygons = mask_to_polygons(mask, transform)

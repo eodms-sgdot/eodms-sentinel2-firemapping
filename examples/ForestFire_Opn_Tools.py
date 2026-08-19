@@ -18,6 +18,8 @@ import glob
 import shutil # to delete if cloud level is more than 30%
 import stat #for read only deletions
 import csv # for cloud level records
+from pathlib import Path
+import boto3
 
 def bbox_from_point(lat, lon, half_size_km=1):
     # Convert km to degrees
@@ -96,7 +98,7 @@ def find_cloud_level(start_directory):
 def process_product_link(product_link, firename):
     zip_url = product_link
     # Directory to extract files to
-    extract_to = "./sentinel_2_data/2026_Fires/" + firename
+    extract_to = "/mnt/data/sentinel_2_data/2026_Fires/" + firename
     # Download and extract a sentinel 2 SAFE zip
     os.makedirs(extract_to, exist_ok=True)
 
@@ -180,7 +182,7 @@ def find_band_jp2file_make_cog(directory_to_search, band_to_search, safeFileName
     #print(f"JP2 CRS is {jp2_crs}")
 
     # Output COG file path
-    output_dir = os.path.join(".", "Result_Images", "Input_COG_Images", firename, safeFileName)
+    output_dir = os.path.join("/mnt/data", "Result_Images", "Input_COG_Images", firename, safeFileName)
     
     # Create folders if they don't exist
     os.makedirs(output_dir, exist_ok=True)
@@ -203,6 +205,7 @@ def find_band_jp2file_make_cog(directory_to_search, band_to_search, safeFileName
     rio_copy(input_jp2, output_cog,  **cog_profile)
 
     print(f"Converted {input_jp2} to Cloud Optimized GeoTIFF: {output_cog}")
+    write_to_s3(output_cog)
     return output_cog
 
 def get_bands_as_cogs(bands, inputDataDir, firename):
@@ -300,6 +303,7 @@ def save_to_GeoTif(rgb_forTif, compositeType, output_dir, profile_ref_cog):
         dst.update_tags(ns="rio_overview", resampling="average")
 
     print(f"Saved {compositeType} - RGB GeoTiff to: {RGB_output_path}")
+    write_to_s3(RGB_output_path)
     return RGB_output_path
 #------------------------------------------------------------------------------
 # Function to have a record of the image collected for each polygon - as a .csv file
@@ -315,9 +319,41 @@ def start_a_new_csv_record(resDataFileName):
         col_headers = [['ProcessDateTime', 'FireProjectName', 'S2FileName', 'CloudPercent', 'Decision']]
         writer.writerows(col_headers)
 
+def start_a_new_activeFire_csv_record(resDataFileName):
+    
+    # Create parent directory if it doesn't exist
+    os.makedirs(os.path.dirname(resDataFileName), exist_ok=True)
+    
+    with open(resDataFileName, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        # Usage example: When we are running the code, For what project purpose, Which files got downloaded, what was the cloud, did we process it or not
+        col_headers = [['ProcessDateTime', 'FireProjectName', 'S2FileName', 'CloudPercent', 'activeFirePixels', 'Decision']]
+        writer.writerows(col_headers)
+
 def write_to_csv(filename, data):
     # 'w' mode creates/overwrites the file
     with open(filename, mode='a', newline='') as file:
         writer = csv.writer(file)
         # data should be an iterable of iterables (e.g., list of lists)
         writer.writerows(data)
+
+def write_to_s3(local_file_path):
+    s3 = boto3.client("s3")
+    path = Path(local_file_path)
+    s3_file_path = str(path.relative_to("/mnt/data"))
+    s3.upload_file(
+        local_file_path,
+        "s2-fire-ard",
+        s3_file_path
+    )
+
+def findIfActiveFire(SWIR_band_12):
+    threshold = 10000 #expecting that there is active fire above this value
+    with rasterio.open(SWIR_band_12) as src:
+        data = src.read(1, masked=True)       
+        countOfFirePixels = np.count_nonzero(data > threshold)
+        if countOfFirePixels > 1: 
+             print(f"Active Fire Detected: Pixels above {threshold}: {countOfFirePixels}")
+        else:
+            print(f"No active fire in this image")
+        return countOfFirePixels
